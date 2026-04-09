@@ -8,6 +8,9 @@ type Props = {
 
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const imgBase = import.meta.env.PUBLIC_IMAGE_BASE ?? base;
+const siteUrl = "https://lunar.lucasilverentand.com";
+const ogImage = imgBase + "og.jpg";
 ---
 
 <!doctype html>
@@ -15,12 +18,42 @@ const base = import.meta.env.BASE_URL;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content={description} />
+
+    <!-- SEO -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={siteUrl} />
+    <meta name="theme-color" content="#121214" />
+    <meta name="author" content="Luca Silverentand" />
+    <meta name="keywords" content="Artemis II, lunar wallpapers, Moon wallpaper, NASA, desktop wallpaper, phone wallpaper, 4K, 5K, space" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:site_name" content="Lunar Wallpapers" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href={"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap"} rel="stylesheet" />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
+    <link rel="apple-touch-icon" href={ogImage} />
   </head>
   <body class="min-h-screen font-sans antialiased">
     <slot />
