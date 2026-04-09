@@ -1,0 +1,194 @@
+---
+import Layout from "../layouts/Layout.astro";
+import images from "../data/images.json";
+
+const base = import.meta.env.BASE_URL;
+
+const desktopSizes = [
+  { label: "5K", slug: "5k", res: "5120 \u00d72880" },
+  { label: "4K", slug: "4k", res: "3840 \u00d72160" },
+  { label: "1080p", slug: "1080p", res: "1920 \u00d71080" },
+];
+
+const phoneSizes = [
+  { label: "iPhone 16 Pro Max", slug: "iphone-16-pro-max", res: "1320 \u00d72868" },
+  { label: "iPhone 16 Pro", slug: "iphone-16-pro", res: "1206 \u00d72622" },
+  { label: "iPhone 16", slug: "iphone-16", res: "1179 \u00d72556" },
+  { label: "iPhone SE", slug: "iphone-se", res: "750 \u00d71334" },
+  { label: "Galaxy S24 Ultra", slug: "samsung-galaxy-s24-ultra", res: "1440 \u00d73120" },
+  { label: "Pixel 9 Pro", slug: "google-pixel-9-pro", res: "1344 \u00d72992" },
+];
+---
+
+<Layout
+  title="Artemis Lunar Desktop"
+  description="Free high-resolution wallpapers from the Artemis I mission. Available for desktop and phone."
+>
+  <!-- Hero -->
+  <header class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-lunar-950 via-transparent to-lunar-950 z-10"></div>
+    <div class="absolute inset-0 bg-[url('/artemis-lunar-desktop/thumbnails/total-solar-eclipse-corona.jpg')] bg-cover bg-center opacity-30 blur-sm scale-105"></div>
+    <div class="relative z-20 flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
+      <p class="text-lunar-400 font-mono text-sm tracking-[0.3em] uppercase mb-4">NASA Artemis I</p>
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight text-white mb-6">
+        Lunar<br />Desktop
+      </h1>
+      <p class="text-lunar-300 text-lg md:text-xl max-w-xl leading-relaxed">
+        {"Free high-resolution wallpapers captured during humanity's return to the Moon."}
+      </p>
+      <div class="mt-8 flex gap-4 text-sm">
+        <span class="px-3 py-1.5 rounded-full border border-lunar-700 text-lunar-300">{images.length} images</span>
+        <span class="px-3 py-1.5 rounded-full border border-lunar-700 text-lunar-300">{"Desktop & Phone"}</span>
+        <span class="px-3 py-1.5 rounded-full border border-lunar-700 text-lunar-300">Up to 5K</span>
+      </div>
+      <a href="#gallery" class="mt-12 text-lunar-400 hover:text-white transition-colors">
+        <svg \u00d7mlns="http://www.w3.org/2000/svg" class="w-6 h-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Gallery -->
+  <main id="gallery" class="max-w-[1600px] mx-auto px-4 md:px-8 pb-24">
+    <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+      {images.map((image) => (
+        <button
+          class="gallery-card group relative block w-full break-inside-avoid rounded-lg overflow-hidden cursor-pointer border-0 bg-transparent p-0 text-left"
+          data-name={image.name}
+          data-description={image.description}
+        >
+          <img
+            src={`${base}thumbnails/${image.name}.jpg`}
+            alt={image.description}
+            loading="lazy"
+            decoding="async"
+            class="w-full block transition-transform duration-500 group-hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="absolute bottom-0 left-0 right-0 p-4">
+              <h3 class="text-white text-sm font-medium capitalize">{image.name.replace(/-/g, " ")}</h3>
+              <p class="text-lunar-300 text-xs mt-1 line-clamp-2">{image.description}</p>
+            </div>
+          </div>
+        </button>
+      ))}
+    </div>
+  </main>
+
+  <!-- Download Modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div class="relative bg-lunar-900 border border-lunar-700 rounded-2xl max-w-lg w-full mx-4 max-h-[85vh] overflow-y-auto shadow-2xl">
+      <div class="sticky top-0 bg-lunar-900 border-b border-lunar-800 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+        <div>
+          <h2 id="modal-title" class="text-white font-medium capitalize"></h2>
+          <p id="modal-desc" class="text-lunar-400 text-sm mt-0.5"></p>
+        </div>
+        <button id="modal-close" class="text-lunar-400 hover:text-white transition-colors p-1">
+          <svg \u00d7mlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-6">
+        <!-- Desktop -->
+        <div>
+          <h3 class="text-lunar-400 font-mono text-xs tracking-widest uppercase mb-3 flex items-center gap-2">
+            <svg \u00d7mlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            Desktop
+          </h3>
+          <div class="grid gap-2">
+            {desktopSizes.map((size) => (
+              <a
+                class="download-link desktop-link flex items-center justify-between px-4 py-3 rounded-lg bg-lunar-800/50 hover:bg-lunar-800 border border-lunar-700/50 hover:border-lunar-600 transition-all group"
+                data-slug={size.slug}
+                download
+              >
+                <span class="text-white text-sm font-medium">{size.label}</span>
+                <span class="text-lunar-400 text-xs font-mono group-hover:text-lunar-200 transition-colors">{size.res}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        <!-- Phone -->
+        <div>
+          <h3 class="text-lunar-400 font-mono text-xs tracking-widest uppercase mb-3 flex items-center gap-2">
+            <svg \u00d7mlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+            Phone
+          </h3>
+          <div class="grid gap-2">
+            {phoneSizes.map((size) => (
+              <a
+                class="download-link phone-link flex items-center justify-between px-4 py-3 rounded-lg bg-lunar-800/50 hover:bg-lunar-800 border border-lunar-700/50 hover:border-lunar-600 transition-all group"
+                data-slug={size.slug}
+                download
+              >
+                <span class="text-white text-sm font-medium">{size.label}</span>
+                <span class="text-lunar-400 text-xs font-mono group-hover:text-lunar-200 transition-colors">{size.res}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-lunar-800 py-12 text-center">
+    <p class="text-lunar-500 text-sm">
+      Images courtesy of <a href="https://www.nasa.gov/mission/artemis-i/" class="text-lunar-300 hover:text-white underline underline-offset-2 transition-colors">NASA Artemis I</a>.
+      Free for personal use.
+    </p>
+    <p class="text-lunar-600 text-xs mt-2">
+      Built by <a href="https://github.com/lucasilverentand" class="hover:text-lunar-400 transition-colors">Luca Silverentand</a>
+    </p>
+  </footer>
+
+  <div id="app-data" data-base={base} class="hidden"></div>
+  <script>
+    const base = document.getElementById("app-data")!.dataset.base!;
+    const modal = document.getElementById("modal")!;
+    const modalTitle = document.getElementById("modal-title")!;
+    const modalDesc = document.getElementById("modal-desc")!;
+    const modalClose = document.getElementById("modal-close")!;
+    const modalBackdrop = document.getElementById("modal-backdrop")!;
+
+    function openModal(name: string, description: string) {
+      modalTitle.textContent = name.replace(/-/g, " ");
+      modalDesc.textContent = description;
+
+      document.querySelectorAll<HTMLAnchorElement>(".desktop-link").forEach((link) => {
+        const slug = link.dataset.slug;
+        link.href = base + "wallpapers/" + name + "/desktop/" + name + "-" + slug + ".jpg";
+      });
+
+      document.querySelectorAll<HTMLAnchorElement>(".phone-link").forEach((link) => {
+        const slug = link.dataset.slug;
+        link.href = base + "wallpapers/" + name + "/phone/" + name + "-" + slug + ".jpg";
+      });
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.style.overflow = "";
+    }
+
+    document.querySelectorAll<HTMLButtonElement>(".gallery-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        openModal(card.dataset.name!, card.dataset.description!);
+      });
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</Layout>
