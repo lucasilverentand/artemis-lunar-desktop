@@ -1,10 +1,13 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
+  "$schema": "./site/node_modules/wrangler/config-schema.json",
   "name": "artemis-lunar-wallpapers",
   "account_id": "029d254cac84938ccede0b57a8711f31",
   "compatibility_date": "2026-04-09",
+  "build": {
+    "command": "cd site && bun install && bun run build"
+  },
   "assets": {
-    "directory": "./dist"
+    "directory": "./site/dist"
   },
   "routes": [
     {
