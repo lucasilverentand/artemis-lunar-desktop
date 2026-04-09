@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import images from "../data/images.json";
 
 const base = import.meta.env.BASE_URL;
+const imgBase = import.meta.env.PUBLIC_IMAGE_BASE ?? base;
 
 const devices = [
   { label: "5K Desktop", slug: "5k", w: 5120, h: 2880, type: "desktop" },
@@ -24,7 +25,7 @@ const devices = [
   <!-- Hero -->
   <header class="relative overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-b from-lunar-950 via-transparent to-lunar-950 z-10"></div>
-    <div class="absolute inset-0 bg-[url('/artemis-lunar-desktop/thumbnails/total-solar-eclipse-corona.jpg')] bg-cover bg-center opacity-30 blur-sm scale-105"></div>
+    <div class={`absolute inset-0 bg-cover bg-center opacity-30 blur-sm scale-105`} style={`background-image: url('${imgBase}thumbnails/total-solar-eclipse-corona.jpg')`}></div>
     <div class="relative z-20 flex flex-col items-center justify-center min-h-[85vh] px-8 text-center">
       <p class="text-lunar-400 font-mono text-sm tracking-[0.3em] uppercase mb-4">NASA Artemis II</p>
       <h1 class="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight text-white mb-6">
@@ -97,20 +98,26 @@ const devices = [
           data-id={image.id}
         >
           <img
-            src={`${base}thumbnails/${image.name}.jpg`}
+            src={`${imgBase}thumbnails/${image.name}.jpg`}
             alt={image.description}
             loading="lazy"
             decoding="async"
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+          <!-- Download count badge (always visible) -->
+          <span
+            class="download-count absolute top-3 right-3 hidden items-center gap-1 bg-black/60 backdrop-blur-sm text-lunar-300 text-[11px] font-mono px-2 py-1 rounded-full z-10"
+            data-image={image.name}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+            <span class="count-value"></span>
+          </span>
+          <!-- Hover overlay -->
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
             <div class="absolute bottom-0 left-0 right-0 p-4">
               <h3 class="text-white text-sm font-medium">{image.title}</h3>
               <p class="text-lunar-300 text-xs mt-1">{image.caption}</p>
-              <div class="flex items-center justify-between mt-1.5">
-                <p class="text-lunar-500 text-[10px] font-mono">{image.credit} · {image.id}</p>
-                <span class="download-count text-lunar-500 text-[10px] font-mono" data-image={image.name}></span>
-              </div>
+              <p class="text-lunar-500 text-[10px] mt-1.5 font-mono">{image.credit} · {image.id}</p>
             </div>
           </div>
         </button>
@@ -171,10 +178,11 @@ const devices = [
     </p>
   </footer>
 
-  <div id="app-data" data-base={base} data-api="https://artemis-lunar-analytics.seventwo.workers.dev" class="hidden"></div>
+  <div id="app-data" data-base={base} data-img-base={imgBase} data-api="https://artemis-lunar-analytics.seventwo.workers.dev" class="hidden"></div>
   <script>
     const appData = document.getElementById("app-data")!;
     const base = appData.dataset.base!;
+    const imgBase = appData.dataset.imgBase!;
     const API = appData.dataset.api!;
     const modal = document.getElementById("modal")!;
     const modalClose = document.getElementById("modal-close")!;
@@ -211,7 +219,7 @@ const devices = [
 
     function getDownloadUrl(name: string) {
       const device = getDevice();
-      return base + "wallpapers/" + name + "/" + device.type + "/" + name + "-" + device.slug + ".jpg";
+      return imgBase + "wallpapers/" + name + "/" + device.type + "/" + name + "-" + device.slug + ".jpg";
     }
 
     function openModal(card: HTMLButtonElement) {
@@ -220,7 +228,7 @@ const devices = [
       const device = getDevice();
       const ratio = device.w / device.h;
 
-      previewImg.src = base + "thumbnails/" + name + ".jpg";
+      previewImg.src = imgBase + "thumbnails/" + name + ".jpg";
       previewImg.alt = card.dataset.title || name.replace(/-/g, " ");
       previewImg.style.aspectRatio = String(ratio);
 
@@ -228,8 +236,8 @@ const devices = [
         previewImg.style.maxHeight = "65vh";
         previewImg.style.maxWidth = "100%";
       } else {
-        previewImg.style.maxHeight = "60vh";
-        previewImg.style.maxWidth = "min(100%, 45vh)";
+        previewImg.style.maxHeight = "70vh";
+        previewImg.style.maxWidth = "min(100%, 55vh)";
       }
       previewImg.style.width = "auto";
       previewImg.style.height = "auto";
@@ -346,7 +354,10 @@ const devices = [
         document.querySelectorAll<HTMLSpanElement>(".download-count").forEach((el) => {
           const name = el.dataset.image;
           if (name && data.downloads[name]) {
-            el.textContent = data.downloads[name].toLocaleString() + " downloads";
+            const valueEl = el.querySelector(".count-value");
+            if (valueEl) valueEl.textContent = data.downloads[name].toLocaleString();
+            el.classList.remove("hidden");
+            el.classList.add("flex");
           }
         });
       } catch {}
